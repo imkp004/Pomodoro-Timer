@@ -1,5 +1,16 @@
 from tkinter import *
 import math
+
+import sys
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -32,16 +43,20 @@ def start_button():
     short = SHORT_BREAK_MIN * 60
     long = LONG_BREAK_MIN * 60
 
+
     if REPS % 2 == 0 and REPS != 8:
         timer.config(text="BREAK", fg=PINK)
         count_down(short)
+        window.focus_force()
 
     elif REPS == 8:
         timer.config(text="BREAK", fg=RED)
         count_down(long)
+        window.focus_force()
     else:
         if REPS > 8:
             reset_button()
+            window.focus_force()
         else:
             window.lift()
             window.attributes('-topmost', True)
@@ -73,6 +88,7 @@ def count_down(count):
         global worker
         worker = window.after(1000, count_down, count -1)
     else:
+        window.focus_force()
         if REPS <= 8 :
             REPS += 1
             start_button()
@@ -94,7 +110,7 @@ window.config(padx=100, pady=50, bg=YELLOW)
 
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
-tomato_img = PhotoImage(file="tomato.png")
+tomato_img = PhotoImage(file=resource_path("tomato.png"))
 canvas.create_image(100, 112, image=tomato_img)
 canvas.grid(column=1, row=1)
 timer_text_item = canvas.create_text(100, 130, text="00:00", font=(FONT_NAME, 35, "bold"))
